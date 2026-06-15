@@ -1,0 +1,20 @@
+# dbt
+target/
+dbt_packages/
+logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Secrets - NEVER commit
+**/secrets.toml
+
+# Large upload files (already in Databricks)
+upload_to_databricks/
+
+# IDE
+.vscode/
+.idea/
