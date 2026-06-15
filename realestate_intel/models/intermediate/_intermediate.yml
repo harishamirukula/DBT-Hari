@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: int_price_trends
+    description: >
+      Price trend analysis per ZIP code with 30-day, 6-month,
+      and 1-year appreciation rates from Zillow ZHVI data.
+    columns:
+      - name: zip_code
+        tests:
+          - unique
+          - not_null
+      - name: price_trend
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['strong_appreciation', 'moderate_appreciation', 'stable', 'moderate_decline', 'strong_decline']
+
+  - name: int_rental_yield
+    description: >
+      Rental yield analysis per ZIP code. Gross yield = (annual rent / home value).
+      Includes 30-day, 6-month, and 1-year yield trends.
+    columns:
+      - name: zip_code
+        tests:
+          - unique
+          - not_null
+      - name: yield_tier
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['premium', 'strong', 'average', 'below_average', 'low']
+
+  - name: int_neighborhood_score
+    description: >
+      Neighborhood amenity scoring per ZIP code from OpenStreetMap data.
+      Composite score based on parks, shopping, entertainment, dining.
+    columns:
+      - name: zip_code
+        tests:
+          - unique
+          - not_null
+      - name: neighborhood_tier
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['excellent', 'good', 'average', 'below_average', 'poor']
+
+  - name: int_school_score
+    description: >
+      School quality scoring per ZIP code from NCES data.
+      Includes 5-year trend analysis using 2017 vs 2022 data.
+    columns:
+      - name: zip_code
+        tests:
+          - unique
+          - not_null
+      - name: school_tier
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['excellent', 'good', 'average', 'below_average', 'poor']

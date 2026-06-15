@@ -1,0 +1,72 @@
+version: 2
+
+sources:
+  - name: realestate_raw
+    database: dbt_hari
+    schema: realestate_raw
+    description: Raw real estate data ingested via Databricks notebooks
+    tables:
+      - name: raw_home_values
+        description: Zillow ZHVI monthly home values by ZIP code (long format)
+      - name: raw_rental_prices
+        description: Zillow ZORI monthly rental prices by ZIP code (long format)
+      - name: raw_amenities
+        description: OpenStreetMap neighborhood amenities mapped to ZIP codes
+      - name: raw_schools
+        description: NCES school directory data (2017 + 2022) by ZIP code
+
+models:
+  - name: stg_home_values
+    description: Cleaned home value time series with standardized types
+    columns:
+      - name: zip_code
+        tests:
+          - not_null
+      - name: date
+        tests:
+          - not_null
+      - name: home_value
+        tests:
+          - not_null
+
+  - name: stg_rental_prices
+    description: Cleaned rental price time series with standardized types
+    columns:
+      - name: zip_code
+        tests:
+          - not_null
+      - name: date
+        tests:
+          - not_null
+      - name: rental_price
+        tests:
+          - not_null
+
+  - name: stg_amenities
+    description: Cleaned amenity records with category classification
+    columns:
+      - name: zip_code
+        tests:
+          - not_null
+      - name: amenity_category
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['parks', 'shopping', 'entertainment', 'dining']
+
+  - name: stg_schools
+    description: Cleaned school records with derived quality metrics
+    columns:
+      - name: nces_school_id
+        tests:
+          - not_null
+      - name: zip_code
+        tests:
+          - not_null
+      - name: year
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [2017, 2022]

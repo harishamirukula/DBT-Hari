@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: market_intelligence
+    description: >
+      Primary buyer search table combining price trends, rental yield,
+      neighborhood amenities, and school quality per ZIP code.
+      Composite livability score (0-100) with metro ranking.
+    columns:
+      - name: zip_code
+        tests:
+          - unique
+          - not_null
+      - name: livability_score
+        tests:
+          - not_null
+      - name: livability_tier
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['A - Premium', 'B - Good', 'C - Average', 'D - Below Average', 'F - Poor']
+
+  - name: investment_hotspots
+    description: >
+      Investment-focused view identifying best ZIPs for real estate
+      investment based on yield, appreciation, and fundamentals.
+    columns:
+      - name: zip_code
+        tests:
+          - unique
+          - not_null
+      - name: investment_signal
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['STRONG BUY', 'BUY', 'HOLD', 'WATCH']
+
+  - name: area_comparison
+    description: >
+      Metro-level aggregation for city-vs-city comparison.
+      One row per metro area with averaged metrics.
+    columns:
+      - name: metro
+        tests:
+          - unique
+          - not_null
+      - name: avg_livability_score
+        tests:
+          - not_null
